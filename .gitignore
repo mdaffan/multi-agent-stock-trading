@@ -7,5 +7,6 @@ wheels/
 *.egg-info
 chroma_db
 .env.local
+.langgraph_api
 # Virtual environments
 .venv

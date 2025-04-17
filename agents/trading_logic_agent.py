@@ -40,6 +40,7 @@ def get_current_price(market_data: Dict[str, Any], symbol: str) -> Optional[floa
 
 def watch_market(state: AgentState):
     """Node for the Trading Logic Agent to continuously watch market data and make trading decisions."""
+
     interpreted_rules = state.get("interpreted_rules", {})
     market_data = state.get("market_data", {})
     portfolio = state.get("portfolio", {})
@@ -53,6 +54,32 @@ def watch_market(state: AgentState):
 
     # If we're watching, check for new market data
     print("Trading logic agent is analyzing market data for trading opportunities...")
+
+    # First, update the state with any new market data
+    from agents.simulated_data import generate_price_update
+
+    # Get the current market data
+    market_data = state.get("market_data", {})
+
+    # Update with simulated price changes for each symbol
+    if "trade" in market_data:
+        for i, trade in enumerate(market_data["trade"]):
+            symbol = trade.get("symbol")
+            current_price = trade.get("price")
+            if symbol and current_price:
+                # Generate a new price update
+                updated_trade = generate_price_update(symbol, current_price)
+                # Update the trade in the market data
+                market_data["trade"][i] = updated_trade
+                # Also update the corresponding bar data
+                if "bar" in market_data:
+                    for j, bar in enumerate(market_data["bar"]):
+                        if bar.get("symbol") == symbol:
+                            market_data["bar"][j]["close"] = updated_trade["price"]
+                            break
+
+    # Update the state with the new market data
+    state["market_data"] = market_data
 
     # Check if we have market data to analyze
     if not market_data:
@@ -79,6 +106,9 @@ def watch_market(state: AgentState):
         print("Strategy fully executed (buy and sell completed). Stopping market watch.")
         return {"trade_signal": trade_signal, "is_watching": False}
 
+    # Add a small delay to simulate continuous watching without overwhelming the system
+    time.sleep(0.5)  # 500ms delay
+
     # Get the strategy directly from the interpreted rules
     strategy = interpreted_rules.get("strategy", {})
     raw_output = interpreted_rules.get("raw_output", "")
@@ -89,13 +119,13 @@ def watch_market(state: AgentState):
     # If no strategy was found, return without a trade signal
     if not strategy:
         print("No strategy found in the interpreted rules.")
-        return {"trade_signal": trade_signal}
+        return {"trade_signal": trade_signal, "market_data": market_data}
 
     # Extract the asset symbol from the strategy
     asset = strategy.get("asset")
     if not asset:
         print("No asset specified in the strategy.")
-        return {"trade_signal": trade_signal}
+        return {"trade_signal": trade_signal, "market_data": market_data}
 
     # Get the entry and exit conditions
     entry_condition = strategy.get("entry_condition", {})
@@ -105,7 +135,7 @@ def watch_market(state: AgentState):
     current_price = get_current_price(market_data, asset)
     if current_price is None:
         print(f"No market data found for asset: {asset}")
-        return {"trade_signal": trade_signal}
+        return {"trade_signal": trade_signal, "market_data": market_data}
 
     print(f"Current price of {asset}: {current_price}")
 
@@ -149,8 +179,8 @@ def watch_market(state: AgentState):
             trade_signal = {"action": "sell", "symbol": asset, "quantity": portfolio.get(asset, 0)}
             print(f"Generated SELL signal: {trade_signal}")
 
-    # Return the updated state with the trade signal
-    return {"trade_signal": trade_signal}
+    # Return the updated state with the trade signal and market data
+    return {"trade_signal": trade_signal, "market_data": market_data}
 
 def start_watching(state: AgentState):
     """Start watching the market for trading opportunities."""

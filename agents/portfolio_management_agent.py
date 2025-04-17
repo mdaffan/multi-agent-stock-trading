@@ -9,6 +9,7 @@ class AgentState(TypedDict):
     cash: float  # Available cash
     transaction_history: List[Dict[str, Any]]  # History of all transactions
     report: str  # Portfolio performance report
+    market_data: Dict[str, Any]
 
 def initialize_portfolio(state: AgentState):
     """Initialize the portfolio with starting cash and empty holdings."""
@@ -44,6 +45,7 @@ def execute_trade(state: AgentState):
     
     # Get the latest price for the symbol from market data
     market_data = state.get("market_data", {})
+    print(market_data)
     current_price = None
     
     # Try to get price from historical bars first

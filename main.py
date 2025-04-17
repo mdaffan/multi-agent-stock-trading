@@ -9,7 +9,7 @@
 
 from langgraph.graph import StateGraph, END
 from agents.user_interface_agent import get_user_strategy
-from agents.market_data_agent import market_data_router, websocket_data, historical_data, update_state_with_data
+from agents.market_data_agent import check_market_hours,market_data_router, websocket_data, historical_data, simulated_websocket_data, simulated_historical_data
 from agents.strategy_agent import interpret_strategy
 from agents.trading_logic_agent import watch_market, start_watching, stop_watching
 from agents.portfolio_management_agent import initialize_portfolio, execute_trade
@@ -18,15 +18,15 @@ from typing import Literal, TypedDict, Dict, Any, List, Optional
 
 class AgentState(TypedDict):
     user_strategy: str
-    interpreted_rules: Dict[str, Any]
-    market_data: Dict[str, Any]  # Changed to Any to accommodate different data formats
-    portfolio: Dict[str, int]
-    cash: float  # Added cash for portfolio management
-    transaction_history: List[Dict[str, Any]]  # Changed to typed list
-    trade_signal: Dict[str, Any]  # Added to store trade signals
-    invalid_strategy: bool
-    report: str
-    market_open: bool  # flag that determines market status
+    interpreted_rules: Optional[Dict[str, Any]]
+    market_data: Optional[Dict[str, Any]]  # Changed to Any to accommodate different data formats
+    portfolio: Optional[Dict[str, int]]
+    cash: Optional[float]  # Added cash for portfolio management
+    transaction_history: Optional[List[Dict[str, Any]]]  # Changed to typed list
+    trade_signal: Optional[Dict[str, Any]]  # Added to store trade signals
+    invalid_strategy: Optional[bool]
+    report: Optional[str]
+    market_open: Optional[bool]  # flag that determines market status
     messages: Optional[List[Dict[str, Any]]] | None  # Changed to typed list
 
 
@@ -39,9 +39,11 @@ workflow.add_node("initialize_portfolio", initialize_portfolio)
 workflow.add_node("start_watching", start_watching)
 
 # Market data nodes
-workflow.add_node("market_data_router", market_data_router)  # Router node
+workflow.add_node("check_market_hours", check_market_hours)  # Router node
 workflow.add_node("websocket_data", websocket_data)  # Live data node
+workflow.add_node("simulated_websocket_data", simulated_websocket_data)  # Live data node
 workflow.add_node("historical_data", historical_data)  # Historical data node
+workflow.add_node("simulated_historical_data", simulated_historical_data)  # Historical data node
 
 # Trading nodes
 workflow.add_node("watch_market", watch_market)
@@ -57,10 +59,16 @@ def should_reprompt_user(state: Dict[str, Any]) -> Literal["user_interface", "st
     else:
         return 'strategy_interpretation'
 
+
+
 # Define the entry point conditional edge
 workflow.add_conditional_edges(
     "user_interface",
     should_reprompt_user
+)
+workflow.add_conditional_edges(
+    "check_market_hours",
+    market_data_router
 )
 
 # Step 1: User query → Strategy interpretation
@@ -70,17 +78,13 @@ workflow.add_edge("strategy_interpretation", "initialize_portfolio")
 workflow.add_edge("initialize_portfolio", "start_watching")
 
 # Step 3: Start market data flow with router
-workflow.add_edge("start_watching", "market_data_router")
-
-# Add conditional edges from the market data router
-workflow.add_conditional_edges(
-    "market_data_router",
-    market_data_router  # Use the function directly as the router
-)
+workflow.add_edge("start_watching", "check_market_hours")
 
 # Connect both data sources to the trading logic
 workflow.add_edge("websocket_data", "watch_market")
 workflow.add_edge("historical_data", "watch_market")
+workflow.add_edge("simulated_websocket_data", "watch_market")
+workflow.add_edge("simulated_historical_data", "watch_market")
 
 # Step 5: Trading logic executes trades when conditions are met
 workflow.add_edge("watch_market", "execute_trade")
