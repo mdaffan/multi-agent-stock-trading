@@ -63,13 +63,23 @@ python main.py
 
 The system will prompt you for a trading strategy and then execute it autonomously.
 
-## Demo
+## Workflow Diagram
 
-Check out the demo video to see the trading system in action:
+The following diagram illustrates the system's workflow:
 
-[![Agentic Trading System Demo](demo-trade.mp4)](demo-trade.mp4)
+![Agentic Trading System Workflow](workflow-diagram.png)
 
-A demo video file `demo-trade.mp4` is included in the repository to show the system in action.
+*Note: The demo video is included in the repository. You can view it after cloning the repo.*
+
+The workflow follows these steps:
+
+1. User provides a trading strategy via the user interface
+2. Strategy is interpreted into structured rules
+3. Portfolio is initialized
+4. Market data agent starts watching (with router deciding between websocket or historical data)
+5. Trading logic agent monitors the market and makes decisions
+6. When conditions are met, trades are executed
+7. When the strategy is complete, the system stops watching
 
 ## Example Prompts
 
@@ -128,15 +138,15 @@ inputs = {
 }
 ```
 
-## Workflow
+## System Architecture
 
-1. User provides a trading strategy
-2. Strategy is interpreted into structured rules
-3. Portfolio is initialized
-4. Market data agent starts fetching data
-5. Trading logic agent monitors the market
-6. When conditions are met, trades are executed
-7. When strategy is complete, the system stops watching
+The system is built using LangGraph, which allows for creating complex workflows with specialized agents. Each agent has a specific role in the trading process:
+
+- **User Interface Agent**: Handles user input and presents results
+- **Strategy Agent**: Uses LLM to convert natural language to structured trading rules
+- **Market Data Agent**: Fetches and processes market data from various sources
+- **Trading Logic Agent**: Analyzes market data against strategy rules
+- **Portfolio Management Agent**: Manages portfolio and executes trades
 
 ## Checkpoints & Known Issues
 
