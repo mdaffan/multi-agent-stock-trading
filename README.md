@@ -1,0 +1,137 @@
+# Agentic Trading System
+
+An autonomous trading system built with LangGraph that uses agent-based architecture to execute trading strategies based on natural language instructions.
+
+## Overview
+
+This system implements a workflow of specialized agents that work together to:
+
+1. Interpret natural language trading strategies
+2. Fetch market data (live or historical)
+3. Monitor the market for trading opportunities
+4. Execute trades when conditions are met
+5. Track portfolio performance
+
+## Architecture
+
+The system consists of the following components:
+
+- **User Interface Agent**: Gets trading strategy from the user
+- **Strategy Agent**: Interprets the strategy into structured rules
+- **Market Data Agent**: Fetches market data (live or historical)
+- **Trading Logic Agent**: Watches market data and makes trading decisions
+- **Portfolio Management Agent**: Executes trades and tracks portfolio
+
+## Installation
+
+This project uses [uv](https://github.com/astral-sh/uv), a fast Python package installer and resolver that significantly improves dependency management.
+
+```bash
+# Install uv if you don't have it
+# Create and activate a virtual environment
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+uv
+```
+
+## Configuration
+
+To use live market data from Alpaca, set the following environment variables:
+
+```bash
+export ALPACA_API_KEY="your_api_key"
+export ALPACA_SECRET_KEY="your_secret_key"
+```
+
+Alternatively, create a `.env` file in the project root with these variables.
+
+## Usage
+Ingest the data onto your chroma-db
+```bash
+python ingest-algo-strategies.py
+```
+
+Run the trading system:
+
+```bash
+python main.py
+```
+
+The system will prompt you for a trading strategy and then execute it autonomously.
+
+## Example Prompts
+
+Here are some example trading strategies you can use:
+
+### Simple Price Trigger
+
+```text
+Buy 10 shares of AAPL when the price goes above $180, and sell when it reaches $190.
+```
+
+### Moving Average Strategy
+
+```text
+Buy TSLA when the 5-day moving average crosses above the 20-day moving average, and sell when it crosses below.
+```
+
+### Volume-Based Strategy
+
+```text
+Buy MSFT when the trading volume is 20% higher than the 10-day average volume, and sell after a 5% profit.
+```
+
+### Multiple Conditions
+
+```text
+Buy GOOGL when the price drops below $140 AND the RSI is below 30, then sell when the price increases by 7%.
+```
+
+### Sector Rotation
+
+```text
+Buy SPY when the technology sector (XLK) outperforms the utilities sector (XLU) by 5% over the last month, and sell when this trend reverses.
+```
+
+## Simulated vs. Live Data
+
+The system can operate in two modes:
+
+1. **Live Data Mode**: Uses real-time market data from Alpaca API
+2. **Simulation Mode**: Uses simulated market data for testing
+
+To switch between modes, change the `use_simulation` flag in the initial state in `main.py`:
+
+```python
+# Use simulated data (when APIs are down)
+inputs = {
+    # ... other inputs ...
+    "use_simulation": True
+}
+
+# Use real Alpaca API data (when APIs are working)
+inputs = {
+    # ... other inputs ...
+    "use_simulation": False
+}
+```
+
+## Workflow
+
+1. User provides a trading strategy
+2. Strategy is interpreted into structured rules
+3. Portfolio is initialized
+4. Market data agent starts fetching data
+5. Trading logic agent monitors the market
+6. When conditions are met, trades are executed
+7. When strategy is complete, the system stops watching
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

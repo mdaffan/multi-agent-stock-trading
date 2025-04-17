@@ -19,3 +19,6 @@ dependencies = [
     "pypdf>=5.4.0",
     "tiktoken>=0.9.0",
 ]
+
+[tool.setuptools]
+packages = ["agents", "chroma_db"]
