@@ -7,7 +7,6 @@ An autonomous trading system built with LangGraph that uses agent-based architec
 The following diagram illustrates the system's workflow:
 
 ![Agentic Trading System Workflow](https://github.com/mdaffan/multi-agent-stock-trading/blob/e883e7bc918b65476fb87afe43911c32acccd78c/workflow.png)
-![Agentic Trading System Workflow](https://github.com/mdaffan/multi-agent-stock-trading/blob/4d6e154b0c022c474db7a16f51bcd6be9f95cbad/demo-trade.mp4)
 
 *Note: The demo video is included in the repository. You can view it after cloning the repo.*
 
