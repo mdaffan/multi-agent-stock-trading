@@ -67,7 +67,7 @@ The system will prompt you for a trading strategy and then execute it autonomous
 
 The following diagram illustrates the system's workflow:
 
-![Agentic Trading System Workflow](https://github.com/[mdaffan]/[multi-agent-stock-trading]/blob/[master]/workflow-diagram.png?raw=true)
+![Agentic Trading System Workflow](https://github.com/mdaffan/multi-agent-stock-trading/blob/e883e7bc918b65476fb87afe43911c32acccd78c/workflow.png)
 
 *Note: The demo video is included in the repository. You can view it after cloning the repo.*
 
