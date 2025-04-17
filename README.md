@@ -48,7 +48,9 @@ export ALPACA_SECRET_KEY="your_secret_key"
 Alternatively, create a `.env` file in the project root with these variables.
 
 ## Usage
+
 Ingest the knowledge data for you RAG onto your chroma-db
+
 ```bash
 python ingest-algo-strategies.py
 ```
@@ -60,6 +62,14 @@ python main.py
 ```
 
 The system will prompt you for a trading strategy and then execute it autonomously.
+
+## Demo
+
+Check out the demo video to see the trading system in action:
+
+[![Agentic Trading System Demo](demo-trade.mp4)](demo-trade.mp4)
+
+A demo video file `demo-trade.mp4` is included in the repository to show the system in action.
 
 ## Example Prompts
 
