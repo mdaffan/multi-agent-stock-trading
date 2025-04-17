@@ -48,7 +48,7 @@ export ALPACA_SECRET_KEY="your_secret_key"
 Alternatively, create a `.env` file in the project root with these variables.
 
 ## Usage
-Ingest the data onto your chroma-db
+Ingest the knowledge data for you RAG onto your chroma-db
 ```bash
 python ingest-algo-strategies.py
 ```
@@ -127,6 +127,30 @@ inputs = {
 5. Trading logic agent monitors the market
 6. When conditions are met, trades are executed
 7. When strategy is complete, the system stops watching
+
+## Checkpoints & Known Issues
+
+### Implemented Checkpoints
+
+- [x] User interface for strategy input
+- [x] Strategy interpretation into structured JSON
+- [x] Market data simulation when APIs are unavailable
+- [x] Basic portfolio management and trade execution
+- [x] Continuous market watching with simulated price updates
+
+### Pending Checkpoints
+
+- [ ] Implement proper error handling for API failures
+- [ ] Add visualization of portfolio performance over time
+- [ ] Support for more complex strategy types (e.g., multi-asset strategies)
+- [ ] Implement strategy testing with historical data
+- [ ] Add risk management rules and position sizing
+- [ ] Create a web interface for easier interaction
+
+### Known Issues
+
+- **Market Watching Loop**: Currently, the system may exit prematurely if certain conditions aren't met instead of continuing to watch the market. This needs to be fixed by improving the conditional logic in the `should_continue_watching` function to properly wait until strategy conditions are met.
+- **API Dependencies**: External API connections (Alpaca) may fail, requiring the use of simulated data mode.
 
 ## Contributing
 
