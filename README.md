@@ -51,7 +51,7 @@ uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
-uv
+uv pip install .
 ```
 
 ## Configuration
