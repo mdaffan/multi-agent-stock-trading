@@ -2,6 +2,24 @@
 
 An autonomous trading system built with LangGraph that uses agent-based architecture to execute trading strategies based on natural language instructions.
 
+## Workflow Diagram
+
+The following diagram illustrates the system's workflow:
+
+![Agentic Trading System Workflow](https://github.com/mdaffan/multi-agent-stock-trading/blob/e883e7bc918b65476fb87afe43911c32acccd78c/workflow.png)
+
+*Note: The demo video is included in the repository. You can view it after cloning the repo.*
+
+The workflow follows these steps:
+
+1. User provides a trading strategy via the user interface
+2. Strategy is interpreted into structured rules
+3. Portfolio is initialized
+4. Market data agent starts watching (with router deciding between websocket or historical data)
+5. Trading logic agent monitors the market and makes decisions
+6. When conditions are met, trades are executed
+7. When the strategy is complete, the system stops watching
+
 ## Overview
 
 This system implements a workflow of specialized agents that work together to:
@@ -63,23 +81,6 @@ python main.py
 
 The system will prompt you for a trading strategy and then execute it autonomously.
 
-## Workflow Diagram
-
-The following diagram illustrates the system's workflow:
-
-![Agentic Trading System Workflow](https://github.com/mdaffan/multi-agent-stock-trading/blob/e883e7bc918b65476fb87afe43911c32acccd78c/workflow.png)
-
-*Note: The demo video is included in the repository. You can view it after cloning the repo.*
-
-The workflow follows these steps:
-
-1. User provides a trading strategy via the user interface
-2. Strategy is interpreted into structured rules
-3. Portfolio is initialized
-4. Market data agent starts watching (with router deciding between websocket or historical data)
-5. Trading logic agent monitors the market and makes decisions
-6. When conditions are met, trades are executed
-7. When the strategy is complete, the system stops watching
 
 ## Example Prompts
 
