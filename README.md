@@ -56,14 +56,18 @@ uv pip install .
 
 ## Configuration
 
-To use live market data from Alpaca, set the following environment variables:
+To use live market data from Alpaca, set the following environment variables in the .env file:
 
 ```bash
-export ALPACA_API_KEY="your_api_key"
-export ALPACA_SECRET_KEY="your_secret_key"
+ALPACA_API_KEY="your_api_key"
+ALPACA_SECRET_KEY="your_secret_key"
 ```
 
-Alternatively, create a `.env` file in the project root with these variables.
+This requires Ollama running locally. You can download it [here](https://ollama.com/download).
+
+```bash
+ollama pull gemma3 or the model of your choice and replace with ollama_llm = ChatOllama(model="gemma3") in agents/strategy_agent.py
+```
 
 ## Usage
 
